@@ -147,6 +147,38 @@
             }
         }
 
+        /* Batman button styling */
+        .batman-btn {
+            font-family: 'Orbitron', sans-serif;
+            color: #333 !important;
+            font-size: 1.2rem;
+            background: #ff0000; /* Red background */
+            padding: 5px 15px; /* Added padding for button-like appearance */
+            border-radius: 5px; /* Slight rounding */
+            transition: all 0.3s ease;
+        }
+
+        .batman-btn:hover {
+            color: #fff !important; /* White text on hover */
+            background: #cc0000; /* Darker red on hover */
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); /* Red glow effect */
+        }
+
+        /* Media Queries adjustments */
+        @media (max-width: 768px) {
+            .batman-btn {
+                font-size: 1rem;
+                padding: 4px 12px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .batman-btn {
+                font-size: 0.9rem;
+                padding: 3px 10px;
+            }
+        }
+
         /* Media Queries for Mobile */
         @media (max-width: 768px) {
             .navbar-brand, .nav-link {
@@ -193,7 +225,7 @@
 <body class="bg-dark text-white">
     <!-- Background Video -->
     <video class="bg-video" loop muted autoplay>
-        <source src="https://res.cloudinary.com/dzvwcdcci/video/upload/v1740398919/ai_bg_lygx95.mp4" type="video/mp4">
+        <source src="https://res.cloudinary.com/dzvwcdcci/video/upload/v1741613822/videoplayback_k7yijn.mp4" type="video/mp4">
     </video>
 
     <!-- Overlay -->
@@ -211,6 +243,7 @@
                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/services">Services</a></li>
                     <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link batman-btn" href="/parts">Batman</a></li>
                 </ul>
             </div>
         </div>
