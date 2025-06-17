@@ -1,0 +1,48 @@
+name: Deploy the N app on Server
+
+on:
+  push:
+    branches:
+      - dev
+      - uat
+      - production  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Set Target Host
+        id: set_host
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            echo "host=${{ secrets.DEV_HOST }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/uat" ]]; then
+            echo "host=${{ secrets.UAT_HOST }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "host=${{ secrets.PROD_HOST }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Copy Project to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ steps.set_host.outputs.host }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "."
+          target: "~/app"
+
+      - name: SSH and Deploy
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ steps.set_host.outputs.host }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/app
+            docker compose down || true
+            docker compose build --no-cache
+            docker compose up -d
