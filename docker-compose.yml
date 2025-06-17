@@ -1,0 +1,5 @@
+services:
+  car_mod:
+    build: .
+    ports:
+      - "9000:9000"
