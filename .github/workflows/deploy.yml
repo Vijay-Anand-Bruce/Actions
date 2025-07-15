@@ -11,30 +11,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Set Host and Branch
-        id: set_host
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            echo "host=${{ vars.DEV_HOST }}" >> $GITHUB_OUTPUT
-            echo "branch=dev" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == "refs/heads/uat" ]]; then
-            echo "host=${{ vars.UAT_HOST }}" >> $GITHUB_OUTPUT
-            echo "branch=uat" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == "refs/heads/production" ]]; then
-            echo "host=${{ vars.PROD_HOST }}" >> $GITHUB_OUTPUT
-            echo "branch=production" >> $GITHUB_OUTPUT
-          fi
+    environment:
+      name: ${{ github.ref_name }}
 
-      - name: SSH and Pull, Checkout, Rebuild
+    steps:
+      - name: SSH and Deploy
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ steps.set_host.outputs.host }}
+          host: ${{ vars.HOST }}
           username: ${{ vars.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd ~/Actions
             git fetch origin
-            git checkout ${{ steps.set_host.outputs.branch }}
-            git pull origin ${{ steps.set_host.outputs.branch }}
+            git checkout ${{ github.ref_name }}
+            git pull origin ${{ github.ref_name }}
             make rebuild
